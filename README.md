@@ -19,7 +19,7 @@
 ## Fall & Hälsolarm
 
 **Projekttitel:** Fall & Hälsolarm
-**Gruppmedlemmar:** Rasmus Pantsari, Daniela Lööw, Sacharias Götesson, Pattaravarat Dahl, Ossian Petermann, Mahdi Ahmadi, Enes Caner Geyve, Rasmus Söberg
+**Gruppmedlemmar:**  Ossian Petermann, Mahdi Ahmadi, Enes Caner Geyve, Rasmus Söberg Pattaravarat Dahl
 **Datum:** 2026-01-12
 
 ---

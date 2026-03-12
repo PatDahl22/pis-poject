@@ -1,0 +1,5 @@
+Raspberry Pi Zero 2 W
+Hostname: pat-dev
+SSH fungerar
+Git fungerar
+Projektmapp skapad

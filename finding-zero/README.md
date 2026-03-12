@@ -9,7 +9,8 @@ Testprojekt på Raspberry Pi Zero 2 W.
 - hardware.sh
 - interrupt-demo.py
 - interrupt-demo.c
-- notes.txtc
+- notes.txt
+- temp-logger.py
 
 ## Syfte
 Att öva filer, Linux-kommandon, scripts och git på Raspberry Pi.

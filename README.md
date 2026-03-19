@@ -1,3 +1,22 @@
+# IoT-Fall_Larm
+
+Demo-fokus på Fog Hubben (Raspberry Pi).
+
+## Demo-funktioner
+- Tar emot MQTT-meddelanden på `fallarm/events`
+- Validerar JSON-payload
+- Sparar larm i lokal SQLite-databas
+- Loggar till terminal
+- Hanterar clean shutdown via SIGINT/SIGTERM
+
+## Körning
+
+```bash
+cd fog
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+bash scripts/run_demo.sh
 
 # IoT Projekt - Arkitekturisk Dokumentation
 

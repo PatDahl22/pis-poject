@@ -1,45 +1,176 @@
 # IoT-Fall_Larm
+Ett IoT-baserat fall-larmssystem som kombinerar embedded system (ESP32) och en fog-hubb (Raspberry Pi) för att detektera fall och hantera larm i realtid.
 
-Demo-fokus på Fog Hubben (Raspberry Pi).
+---
 
-## Demo-funktioner
-- Tar emot MQTT-meddelanden på `fallarm/events`
-- Validerar JSON-payload
-- Sparar larm i lokal SQLite-databas
-- Loggar till terminal
-- Hanterar clean shutdown via SIGINT/SIGTERM
+## Översikt
+Systemet är uppbyggt enligt en Edge–Fog-arkitektur:
 
-## Körning
+- Edge (ESP32) samlar in sensordata och detekterar fall
+- Fog (Raspberry Pi) tar emot data, bearbetar och lagrar lokalt
+- Kommunikation sker via MQTT
 
-```bash
-cd fog
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-bash scripts/run_demo.sh
+Målet är att skapa ett robust system som fungerar även utan internet.
 
-# IoT Projekt - Arkitekturisk Dokumentation
+---
 
-## **Index**
-* [1. Projektöversikt](#1-projektöversikt)
-* [2. Systemarkitektur](#2-systemarkitektur)
-    - [2.1 Hårdvarukomponenter](#21-hårdvarukomponenter)
-    - [2.2 Mjukvarukomponenter](#22-mjukvarukomponenter)
-    - [2.3 Nätverkskonfiguration](#23-nätverkskonfiguration)
-* [3. Designprinciper](#3-designprinciper)
-* [4. Utvecklingsprocess](#4-utvecklingsprocess)
-* [5. Datahantering](#5-datahantering)
-    - [5.1 Datainsamling](#51-datainsamling)
-    - [5.2 Databearbetning](#52-databearbetning)
-    - [5.3 Datalagring](#53-datalagring)
-* [6. Utmaningar-och-lösningar](#6-utmaningar-och-lösningar)
+## Systemarkitektur
+
+Systemet är uppbyggt enligt en Edge–Fog-arkitektur:
+
+- ESP32 (Edge) – samlar in sensordata och detekterar fall
+- MQTT (Mosquitto) – hanterar kommunikation mellan enheter
+- Raspberry Pi (Fog Hub) – tar emot, bearbetar och lagrar data
+- SQLite Database – lagrar larm och sensordata lokalt
+
+---
+
+## Projektstruktur
+    IoT-Fall_Larm/
+    ├── edge/ # ESP32 (Embedded system)
+    │ ├── src/
+    │ ├── include/
+    │ ├── components/
+    │ └── test/
+    │
+    ├── fog/ # Raspberry Pi (Fog Hub)
+    │ ├── src/
+    │ ├── scripts/
+    │ ├── database/
+    │ └── config/
+    │
+    ├── shared/ # Gemensamma resurser
+    │ └── protocols/
+    │
+    ├── docs/ # Dokumentation
+    │ ├── demo/
+    │ └── architecture.md
+    │
+    └── tests/
+---
+
+## ESP32 (Edge)
+Edge-enheten ansvarar för att samla in och analysera sensordata i realtid.
+
+### Funktioner (design)
+- Läser sensordata (accelerometer, puls, temperatur)
+- Identifierar fall baserat på rörelsemönster
+- Filtrerar och bearbetar signaler
+- Skickar data via MQTT till fog-hubben
+- Kör realtidslogik med RTOS
 
 
-## Fall & Hälsolarm
+### Status
+- Delvis implementerad / simulerad i (Fog Hub) demo
 
-**Projekttitel:** Fall & Hälsolarm
-**Gruppmedlemmar:** Rasmus Pantsari, Daniela Lööw, Sacharias Götesson, Pattaravarat Dahl, Ossian Petermann, Mahdi Ahmadi, Enes Caner Geyve, Rasmus Söberg
-**Datum:** 2026-01-12
+---
+
+## MQTT (Mosquitto)
+MQTT används som kommunikationslager mellan edge och fog.
+
+### Funktioner
+- Publish/Subscribe-modell
+- Topic: fallarm/events
+- Låg latens och låg energiförbrukning
+- Möjliggör skalbar kommunikation mellan flera enheter
+
+### Status
+- Implementerad i demo (lokal broker utan TLS)
+
+---
+
+## Raspberry Pi (Fog Hub)
+Fog-hubben tar emot, bearbetar och lagrar data från edge-enheter.
+
+### Funktioner
+- Tar emot MQTT-meddelanden (fallarm/events)
+- Validerar JSON payload
+- Sparar larm i SQLite-databas
+- Loggar i realtid
+- Hanterar clean shutdown (SIGINT / SIGTERM)
+
+### Implementerat (Fog-Hub)
+- MQTT-kommunikation
+- Fog hub i Python
+- SQLite databas
+- End-to-end dataflöde (simulerad ESP32)
+- Processhantering i Linux
+- Signalhantering (clean shutdown)
+
+---
+
+## SQLite Database
+
+Databasen används för lokal lagring av larm och sensordata.
+
+### Funktioner
+- Lagrar fallhändelser
+- Sparar metadata (device_id, timestamp, sensordata)
+- Automatisk tabellskapning
+- Snabb och resurseffektiv lagring
+
+### Status
+- Implementerad i (Fog Hub) demo (okrypterad)
+
+---
+
+## Installation
+
+### 1. Gå till fog-mappen
+bash
+    cd fog
+    
+### 2. Skapa virtual environment
+bash
+    python3 -m venv .venv
+    source .venv/bin/activate
+
+### 3. Installera dependencies
+bash
+    pip install -r requirements.txt
+
+#### Kör demo
+bash 
+    scripts/run_demo.sh
+
+#### Testa systemet
+Skicka testlarm
+bash 
+    scripts/publish_test_alarm.sh
+#### Kontrollera databas
+bash 
+    scripts/check_db.sh
+
+---
+
+## Begränsningar (Fog-Hub)
+- ESP32 är simulerad via script
+- MQTT körs utan TLS
+- Databasen är inte krypterad
+- Ingen autentisering
+
+## Framtida arbete
+- Integration med riktig ESP32
+- TLS (säker MQTT)
+- Krypterad databas (SQLCipher)
+- Mobilapplikation
+
+## Sammanfattning
+Detta projekt demonstrerar hur ett IoT-system kan byggas med fokus på:
+- Robusthet
+- Realtidsbearbetning
+- Lokal lagring
+- Modulär arkitektur
+Systemet är designat för att kunna skalas och integreras med riktig hårdvara.
+
+## Team
+- Pattaravarat Dahl
+- Ossian Petermann
+- Mahdi Ahmadi
+- Enes Caner Geyve
+- Rasmus Söberg
+
+## Datum: 2026-02-23
 
 ---
 

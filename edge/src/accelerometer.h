@@ -2,35 +2,41 @@
 #define ACCELEROMETER_H
 
 #include <stdbool.h>
-#include "driver/i2c.h"
+#include "esp_err.h"
 
-// I2C pinnar for ESP32-H2
-#define SDA_PIN     12
-#define SCL_PIN     22
+#define ACCEL_SDA_PIN    12
+#define ACCEL_SCL_PIN    22
 
-// MMA8452Q adress
-#define SENSOR_ADDR 0x1D
+#define ACCEL_I2C_ADDR  0x1D
+#define ACCEL_FALL_THRESHOLD    0.8f // gravitation för fall => under 0.8g
+#define ACCEL_IMPACT_THRESHOLD  3.0f // gravitation när ett fall händer  => över 2.0g
+#define ACCEL_STILL_THRESHOLD   1.2f // gravitation när det är stilla = under 1.2g
+#define ACCEL_STILL_DURATION_MS 2000
 
-// Tröskelvärden
-#define FREEFALL_THRESHOLD  650
-#define IMPACT_THRESHOLD    2200
-#define STILL_THRESHOLD     1200
+typedef struct {
+    float x;
+    float y;
+    float z;
+    float total;
+} accel_data_t;
 
-// Tillstand
-#define STATE_IDLE      0
-#define STATE_FREEFALL  1
-#define STATE_IMPACT    2
-#define STATE_ALARM     3
 
-// Global state - används av main.c också
-extern int current_state;
-extern int still_count;
-extern bool false_alarm;
+typedef enum{
+    FALL_NONE = 0,
+    FALL_PHASE1,
+    FALL_PHASE2,
+    FALL_CONFIRMED
+} fall_state_t;
 
-// Funktioner som main.c får använda
-void i2c_setup();
-bool sensor_init();
-bool read_accel(int16_t *x, int16_t *y, int16_t *z);
-void check_fall(float total);
+esp_err_t    accelerometer_init(void);
+accel_data_t accelerometer_read(void);
+bool         accelerometer_detect_fall(accel_data_t data);
+void         accelerometer_task(void *pvParameters);
+void         accelerometer_reset(void);
 
 #endif
+
+
+
+
+

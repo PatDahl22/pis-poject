@@ -10,5 +10,6 @@ idf_component_register(
         "led.c"
         "buzzer.c"
         "heartbeat.c"
+        "button.c"
     INCLUDE_DIRS "."
 )

@@ -9,7 +9,7 @@
 
 #define ACCEL_I2C_ADDR  0x1D
 #define ACCEL_FALL_THRESHOLD    0.8f // gravitation för fall => under 0.8g
-#define ACCEL_IMPACT_THRESHOLD  3.0f // gravitation när ett fall händer  => över 2.0g
+#define ACCEL_IMPACT_THRESHOLD  2.0f // gravitation när ett fall händer  => över 3.0g
 #define ACCEL_STILL_THRESHOLD   1.2f // gravitation när det är stilla = under 1.2g
 #define ACCEL_STILL_DURATION_MS 2000
 
